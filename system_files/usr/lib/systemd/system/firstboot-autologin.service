@@ -1,0 +1,10 @@
+[Unit]
+Description=Enable SDDM autologin for first created user
+Before=display-manager.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/firstboot-autologin.sh
+
+[Install]
+WantedBy=multi-user.target
