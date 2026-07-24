@@ -5,7 +5,7 @@ if [ -n "$USER" ]; then
   cat > /etc/sddm.conf.d/autologin.conf << EOF
 [Autologin]
 User=$USER
-Session=plasma.desktop
+Session=plasma-bigscreen-wayland.desktop
 EOF
 fi
 systemctl disable firstboot-autologin.service
