@@ -18,9 +18,10 @@ Custom bootc-based Home Theater PC image built on Kinoite with Plasma Bigscreen.
 
 ### Install from ISO
 
-1. Download the [latest ISO](https://github.com/douglascdev/blueHTPC/releases) or build it(see Dev section)
-2. Boot the ISO and go through the Anaconda installer
-3. On first boot, you'll be auto-logged into Plasma Bigscreen
+1. Download the latest ISO (GitHub account needed) from the [Actions page](https://github.com/douglascdev/blueHTPC/actions/workflows/build-disk.yml): click the latest run(first on the list) → **Artifacts** or build it (see Dev section).
+2. Extract the artifact to get install.iso and use it in [Fedora Media Writer](https://fedoraproject.org/workstation/download/#fedora-media-writer) or a similar program to burn the ISO into a flash drive
+3. Boot the ISO and go through the Anaconda installer
+4. On first boot, you'll be auto-logged into Plasma Bigscreen
 
 ### Switch from an existing bootc system
 
@@ -85,6 +86,7 @@ After installing from the ISO once, you can iterate on changes without rebuildin
 sudo just build
 
 # 2. Push to a test tag (keeps :latest clean for production)
+# GH_TOKEN -> a github PAT with write:packages scope
 sudo podman login ghcr.io -u login -p "$GH_TOKEN"
 sudo podman push localhost/bluehtpc:latest ghcr.io/douglascdev/bluehtpc:testing
 
