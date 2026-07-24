@@ -15,6 +15,9 @@ cp -avf "/ctx/system_files"/. /
 # install fedora packages
 dnf5 install -y firefox flatpak plasma-bigscreen 
 
+# prevent KDE welcome screen on first login
+rm -f /etc/xdg/autostart/org.kde.plasma-welcome.desktop
+
 # enable flathub
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
