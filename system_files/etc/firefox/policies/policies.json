@@ -1,0 +1,9 @@
+{
+  "policies": {
+    "Extensions": {
+      "Install": [
+        "https://addons.mozilla.org/firefox/downloads/file/4888680/ublock_origin-1.72.2.xpi"
+      ]
+    }
+  }
+}
