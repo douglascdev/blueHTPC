@@ -18,7 +18,7 @@ Custom bootc-based Home Theater PC image built on Kinoite with Plasma Bigscreen.
 
 ### Install from ISO
 
-1. Build the ISO (see Dev section), or download from GitHub Actions artifacts
+1. Download the [latest ISO](https://github.com/douglascdev/blueHTPC/releases) or build it(see Dev section)
 2. Boot the ISO and go through the Anaconda installer
 3. On first boot, you'll be auto-logged into Plasma Bigscreen
 
