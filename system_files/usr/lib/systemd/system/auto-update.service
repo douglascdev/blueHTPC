@@ -1,0 +1,6 @@
+[Unit]
+Description=Check for bootc and flatpak updates
+
+[Service]
+Type=oneshot
+ExecStart=/bin/sh -c 'bootc upgrade; flatpak update -y'

@@ -28,4 +28,4 @@ flatpak install -y rocks.shy.VacuumTube
 
 #### Example for enabling a System Unit File
 
-systemctl enable firstboot-autologin.service
+systemctl enable firstboot-autologin.service auto-update.timer
