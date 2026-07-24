@@ -4,7 +4,7 @@ Before=display-manager.service
 
 [Service]
 Type=oneshot
-ExecStart=/usr/local/bin/firstboot-autologin.sh
+ExecStart=/usr/libexec/firstboot-autologin.sh
 
 [Install]
 WantedBy=multi-user.target
