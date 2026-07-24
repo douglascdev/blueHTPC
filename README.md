@@ -8,7 +8,8 @@ Custom bootc-based Home Theater PC image built on Kinoite with Plasma Bigscreen.
 - **Plasma Bigscreen** — TV-friendly 10-foot UI as the default session
 - **Auto-login** — Automatically logs into Plasma Bigscreen on first boot after install
 - **Pre-installed packages** — Firefox, `plasma-bigscreen`, Flatpak support
-- **Pre-installed Flatpaks** — VacuumTube, Flathub remote configured
+- **Pre-installed Flatpaks** — VacuumTube, Plex HTPC, Stremio, Kodi, Flathub remote configured
+- **Bigscreen favorites** — All apps pre-pinned to the Plasma Bigscreen home screen
 - **uBlock Origin** — Auto-installed in Firefox via enterprise policy
 - **Auto-updates** — Daily `bootc upgrade` + `flatpak update` via systemd timer
 - **Anaconda ISO** — Full KDE installer with interactive setup (user creation, disk partitioning, etc.)
@@ -104,6 +105,24 @@ Edit `build_files/build.sh` and add packages to the `dnf5 install` line for RPMs
 dnf5 install -y firefox flatpak plasma-bigscreen my-new-package
 flatpak install -y com.example.MyApp
 ```
+
+#### Adding apps to Bigscreen favorites
+
+Edit `system_files/etc/skel/.config/bigscreen-favs`. Each entry has an index (`[Favs][N]`) followed by fields describing the app launcher. To add a new app, append a new block with the next index. The `desktopPath` and `entryPath` should match the app's `.desktop` file:
+
+```ini
+[Favs][5]
+categories=AudioVideo
+comment=My App description
+desktopPath=/var/lib/flatpak/exports/share/applications/com.example.MyApp.desktop
+entryPath=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=myapp com.example.MyApp
+icon=com.example.MyApp
+name=My App
+startupNotify=false
+storageId=com.example.MyApp.desktop
+```
+
+For system (non-Flatpak) apps, `desktopPath` goes under `/usr/share/applications/` and `entryPath` is the command directly.
 
 #### Adding system files
 
