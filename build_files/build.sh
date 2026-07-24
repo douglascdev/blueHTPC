@@ -18,7 +18,7 @@ dnf5 install -y firefox flatpak plasma-bigscreen
 # enable flathub
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-flatpak install rocks.shy.VacuumTube
+flatpak install -y rocks.shy.VacuumTube
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
