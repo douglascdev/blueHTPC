@@ -42,7 +42,7 @@ jobs:
       matrix:
         disk-type: ["qcow2", "anaconda-iso"]
     permissions:
-      contents: write
+      contents: read
       packages: read
       id-token: write
 
@@ -113,12 +113,3 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y rclone
           rclone copy $SOURCE_DIR S3:${{ secrets.S3_BUCKET_NAME }}
-
-      - name: Upload to GitHub Release
-        if: github.event_name != 'pull_request'
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          TAG="latest-disk"
-          gh release create "$TAG" --title "Latest disk images" --notes "Built from ${{ github.sha }}" 2>/dev/null || true
-          find "${{ steps.build.outputs.output-directory }}" -type f -exec gh release upload "$TAG" {} --clobber \;
