@@ -1,0 +1,49 @@
+[Favs][0]
+categories=AudioVideo
+comment=Watch and explore videos on YouTube
+desktopPath=/var/lib/flatpak/exports/share/applications/rocks.shy.VacuumTube.desktop
+entryPath=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=startvacuumtube --file-forwarding rocks.shy.VacuumTube @@u %U @@
+icon=rocks.shy.VacuumTube
+name=VacuumTube
+startupNotify=false
+storageId=rocks.shy.VacuumTube.desktop
+
+[Favs][1]
+categories=Network,WebBrowser
+comment=Browse the Web
+desktopPath=/usr/share/applications/org.mozilla.firefox.desktop
+entryPath=firefox %u
+icon=firefox
+name=Firefox
+startupNotify=true
+storageId=org.mozilla.firefox.desktop
+
+[Favs][2]
+categories=AudioVideo,Player,Media
+comment=Plex HTPC client for the big screen
+desktopPath=/var/lib/flatpak/exports/share/applications/tv.plex.PlexHTPC.desktop
+entryPath=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=plex tv.plex.PlexHTPC
+icon=tv.plex.PlexHTPC
+name=Plex HTPC
+startupNotify=false
+storageId=tv.plex.PlexHTPC.desktop
+
+[Favs][3]
+categories=Utility,AudioVideo,Video,Player
+comment=Freedom To Stream
+desktopPath=/var/lib/flatpak/exports/share/applications/com.stremio.Stremio.desktop
+entryPath=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=stremio --file-forwarding com.stremio.Stremio @@u %u @@
+icon=com.stremio.Stremio
+name=Stremio
+startupNotify=true
+storageId=com.stremio.Stremio.desktop
+
+[Favs][4]
+categories=AudioVideo,Video,Player,TV
+comment=Manage and view your media
+desktopPath=/var/lib/flatpak/exports/share/applications/tv.kodi.Kodi.desktop
+entryPath=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=kodi tv.kodi.Kodi
+icon=tv.kodi.Kodi
+name=Kodi
+startupNotify=false
+storageId=tv.kodi.Kodi.desktop
