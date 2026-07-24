@@ -21,7 +21,7 @@ rm -f /etc/xdg/autostart/org.kde.plasma-welcome.desktop
 # enable flathub
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-flatpak install -y rocks.shy.VacuumTube
+flatpak install -y rocks.shy.VacuumTube com.stremio.Stremio
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging
