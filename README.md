@@ -69,16 +69,13 @@ sudo just rebuild-qcow2
 ```bash
 # Build the ISO first
 sudo just rebuild-iso
-
-# Then open it in GNOME Boxes
-boxes output/bootiso/install.iso
 ```
 
-Alternatively open GNOME Boxes, click **+ → Import Image**, and select `output/bootiso/install.iso`.
+Open GNOME Boxes, click **+ → Import Image**, and select `output/bootiso/install.iso`.
 
 The ISO runs the Anaconda installer. Once installed, the VM will boot into blueHTPC with Plasma Bigscreen on each subsequent start.
 
-### Maintaners: Testing changes without reinstalling
+### Maintainers: Testing changes without reinstalling
 
 After installing from the ISO once, you can iterate on changes without rebuilding the ISO:
 
@@ -87,6 +84,7 @@ After installing from the ISO once, you can iterate on changes without rebuildin
 sudo just build
 
 # 2. Push to a test tag (keeps :latest clean for production)
+sudo podman login ghcr.io -u login -p "$GH_TOKEN"
 sudo podman push localhost/bluehtpc:latest ghcr.io/douglascdev/bluehtpc:testing
 
 # 3. In the VM, switch to the test tag and reboot
