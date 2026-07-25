@@ -30,13 +30,11 @@ flatpak install -y rocks.shy.VacuumTube com.stremio.Stremio tv.plex.PlexHTPC tv.
 
 systemctl enable firstboot-autologin.service auto-update.timer
 
-# Prevent suspend when closing laptop's lid
-cat >> /etc/systemd/logind.conf <<'EOF'
-
-HandleLidSwitch=ignore
-HandleLidSwitchExternalPower=ignore
-HandleLidSwitchDocked=ignore
-EOF
+# Prevent sleep, suspend, and hibernation
+sudo ln -sf /dev/null /etc/systemd/system/sleep.target
+sudo ln -sf /dev/null /etc/systemd/system/suspend.target
+sudo ln -sf /dev/null /etc/systemd/system/hibernate.target
+sudo ln -sf /dev/null /etc/systemd/system/hybrid-sleep.target
 
 # Create the system-wide WirePlumber configuration directory
 mkdir -p /etc/wireplumber/wireplumber.conf.d
