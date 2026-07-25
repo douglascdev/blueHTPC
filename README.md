@@ -1,6 +1,8 @@
 # blueHTPC
 
-Custom bootc-based Home Theater PC image built on Kinoite with Plasma Bigscreen.
+Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed apps, based on bootc/universal blue.
+
+<img width="1192" height="651" alt="image" src="https://github.com/user-attachments/assets/91742080-a532-4d3c-b099-27020e62ca46" />
 
 ## Features
 
