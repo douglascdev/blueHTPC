@@ -29,3 +29,11 @@ flatpak install -y rocks.shy.VacuumTube com.stremio.Stremio tv.plex.PlexHTPC tv.
 #### Example for enabling a System Unit File
 
 systemctl enable firstboot-autologin.service auto-update.timer
+
+# Prevent suspend when closing laptop's lid
+cat >> /etc/systemd/logind.conf <<'EOF'
+
+HandleLidSwitch=ignore
+HandleLidSwitchExternalPower=ignore
+HandleLidSwitchDocked=ignore
+EOF

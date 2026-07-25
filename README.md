@@ -15,6 +15,8 @@ Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed
 - **uBlock Origin** — Auto-installed in Firefox via enterprise policy
 - **Auto-updates** — Daily `bootc upgrade` + `flatpak update` via systemd timer
 - **Anaconda ISO** — Full KDE installer with interactive setup (user creation, disk partitioning, etc.)
+- **Laptops** - Prevent suspension
+  - Prevent suspension on lid close
 
 ## Quick Start
 
