@@ -2,15 +2,15 @@
 name: Build container image
 on:
   pull_request:
-    branches:
-      - main
-  schedule:
-    - cron: '05 10 * * *'  # 10:05am UTC everyday
-  push:
-    branches:
-      - main
-    paths-ignore:
-      - '**/README.md'
+ #  branches:
+ #    - main
+ #schedule:
+ #  - cron: '05 10 * * *'  # 10:05am UTC everyday
+ #push:
+ #  branches:
+ #    - main
+ #  paths-ignore:
+ #    - '**/README.md'
   workflow_dispatch:
 
 env:
@@ -158,4 +158,13 @@ jobs:
           DIGEST: ${{ steps.push-image.outputs.digest }}
         run: |
           cosign sign -y --key env://COSIGN_PRIVATE_KEY ${IMAGE_REGISTRY}/${IMAGE_NAME}@${DIGEST}
+
+  build_disk:
+    name: Build disk images
+    needs: [build_push]
+    uses: ./.github/workflows/build-disk.yml
+    with:
+      platform: amd64
+      upload-to-s3: false
+    secrets: inherit
 

@@ -15,13 +15,23 @@ on:
         options:
           - amd64
           - arm64
-  pull_request:
-    branches:
-      - main
-    paths:
-      - './disk_config/disk.toml'
-      - './disk_config/iso-kde.toml'
-      - './.github/workflows/build-disk.yml'
+  workflow_call:
+    inputs:
+      upload-to-s3:
+        description: "Upload to S3"
+        required: false
+        default: false
+        type: boolean
+      platform:
+        required: true
+        type: string
+# pull_request:
+#   branches:
+#     - main
+#   paths:
+#     - './disk_config/disk.toml'
+#     - './disk_config/iso-kde.toml'
+#     - './.github/workflows/build-disk.yml'
 
 env:
   IMAGE_NAME: ${{ github.event.repository.name }} # output of build.yml, keep in sync
