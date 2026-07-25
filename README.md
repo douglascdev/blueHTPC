@@ -6,17 +6,18 @@ Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed
 
 ## Features
 
-- **Kinoite base** — Fedora Kinoite with KDE Plasma
-- **Plasma Bigscreen** — TV-friendly 10-foot UI as the default session
-- **Auto-login** — Automatically logs into Plasma Bigscreen on first boot after install
-- **Pre-installed packages** — Firefox, `plasma-bigscreen`, Flatpak support
-- **Pre-installed Flatpaks** — VacuumTube, Plex HTPC, Stremio, Kodi, Flathub remote configured
-- **Bigscreen favorites** — All apps pre-pinned to the Plasma Bigscreen home screen
-- **uBlock Origin** — Auto-installed in Firefox via enterprise policy
-- **Auto-updates** — Daily `bootc upgrade` + `flatpak update` via systemd timer
-- **Anaconda ISO** — Full KDE installer with interactive setup (user creation, disk partitioning, etc.)
+- **Kinoite base** - Fedora Kinoite with KDE Plasma
+- **Plasma Bigscreen** - TV-friendly 10-foot UI as the default session
+- **Auto-login** - Automatically logs into Plasma Bigscreen on first boot after install
+- **Pre-installed packages** - Firefox, `plasma-bigscreen`, Flatpak support
+- **Pre-installed Flatpaks** - VacuumTube, Plex HTPC, Stremio, Kodi, Flathub remote configured
+- **Bigscreen favorites** - All apps pre-pinned to the Plasma Bigscreen home screen
+- **uBlock Origin** - Auto-installed in Firefox via enterprise policy
+- **Auto-updates** - Daily `bootc upgrade` + `flatpak update` via systemd timer
+- **Anaconda ISO** - Full KDE installer with interactive setup (user creation, disk partitioning, etc.)
 - **Laptops** - Prevent suspension
   - Prevent suspension on lid close
+  - Disable suspend for audio sinks so sound doesn't cut out after idle
 
 ## Quick Start
 
@@ -145,8 +146,8 @@ systemctl enable my-service.service
 
 #### Modifying the ISO installer
 
-Edit `disk_config/iso-kde.toml` to change Anaconda kickstart behavior or installer modules. The `bootc switch` line in the `%post` section determines which image gets installed — update it if you push to a different registry or image name.
+Edit `disk_config/iso-kde.toml` to change Anaconda kickstart behavior or installer modules. The `bootc switch` line in the `%post` section determines which image gets installed - update it if you push to a different registry or image name.
 
 #### Building via GitHub Actions
 
-Push to `main` — the `build.yml` workflow automatically builds and pushes to GHCR. Trigger the `build-disk.yml` workflow manually from the Actions tab to produce ISOs and QCOW2 images as downloadable artifacts.
+Push to `main` - the `build.yml` workflow automatically builds and pushes to GHCR. Trigger the `build-disk.yml` workflow manually from the Actions tab to produce ISOs and QCOW2 images as downloadable artifacts.

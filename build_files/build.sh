@@ -37,3 +37,24 @@ HandleLidSwitch=ignore
 HandleLidSwitchExternalPower=ignore
 HandleLidSwitchDocked=ignore
 EOF
+
+# Create the system-wide WirePlumber configuration directory
+mkdir -p /etc/wireplumber/wireplumber.conf.d
+# Disable suspend for audio sinks so sound doesn't cut out after idle
+cat << 'EOF' > /etc/wireplumber/wireplumber.conf.d/51-disable-suspension.conf
+monitor.alsa.rules = [
+  {
+    matches = [
+      {
+        node.name = "~alsa_output.*"
+      }
+    ]
+    actions = {
+      update-props = {
+        session.suspend-timeout-seconds = 0
+      }
+    }
+  }
+]
+EOF
+
