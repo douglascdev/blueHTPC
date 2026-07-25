@@ -161,6 +161,8 @@ jobs:
 
   build_disk:
     name: Build disk images
+    permissions:
+      id-token: write
     needs: [build_push]
     uses: ./.github/workflows/build-disk.yml
     with:
