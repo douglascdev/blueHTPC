@@ -34,6 +34,28 @@ sudo bootc switch ghcr.io/douglascdev/bluehtpc:latest
 sudo reboot
 ```
 
+## KDE Connect Remote
+
+Plasma Bigscreen includes a built-in **TV Remote** interface that pairs with [KDE Connect](https://kdeconnect.kde.org/) on your phone.
+
+### Pairing
+
+1. Install KDE Connect on your phone (available on [Google Play](https://play.google.com/store/apps/details?id=org.kde.kdeconnect_tp))
+2. Ensure both devices are on the same network
+3. On the Bigscreen home screen, click the phone icon and select your phone
+4. Open KDE Connect on your phone and tap the blueHTPC entry when it appears
+5. Accept the pairing request on both devices
+
+Once paired, the remote control will appear automatically — you can navigate with touch, swipe for mouse mode, and use the keyboard tab for text input.
+
+### Enabling the home screen button
+
+The TV Remote has a home button that closes the current application. To enable it:
+
+1. On the KDE Connect home, tap the **remote input option**
+2. Click Settings in the top-right corner
+3. Scroll down to **Show home button** and toggle it on
+
 ## Dev
 
 ### Prerequisites
