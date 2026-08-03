@@ -56,14 +56,6 @@ Plasma Bigscreen includes a built-in **TV Remote** interface that pairs with [KD
 
 Once paired, the remote control will appear automatically — you can navigate with touch, swipe for mouse mode, and use the keyboard tab for text input.
 
-### Enabling the home screen button
-
-The TV Remote has a home button that closes the current application. To enable it:
-
-1. On the KDE Connect home, tap the **remote input option**
-2. Click Settings in the top-right corner
-3. Scroll down to **Show home button** and toggle it on
-
 ## Dev
 
 ### Prerequisites
