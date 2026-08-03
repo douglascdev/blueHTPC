@@ -36,7 +36,7 @@ sudo reboot
 
 ## Installing New Apps
 
-Use **Bazaar** (pre-installed) to install additional applications. Bazaar is a Flatpak app store that lets you browse and install apps from Flathub directly from your TV remote-friendly UI.
+Use **Bazaar** (pre-installed) to install additional applications. Bazaar is a Flatpak app store that lets you browse and install apps from Flathub.
 
 - Launch **Bazaar** from the Plasma Bigscreen home screen
 - Browse a **curated section** with **frequently installed apps** (Jellyfin, Steam, Discord, Spotify, Heroic Games Launcher, Lutris, RetroArch, ProtonPlus, VLC, Flatseal, Steam Link, Dolphin, and Protontricks) for one-click installs
