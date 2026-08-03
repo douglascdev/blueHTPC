@@ -10,7 +10,7 @@ Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed
 - **Plasma Bigscreen** - TV-friendly 10-foot UI as the default session
 - **Auto-login** - Automatically logs into Plasma Bigscreen on first boot after install
 - **Pre-installed packages** - Firefox, `plasma-bigscreen`, Flatpak support
-- **Pre-installed Flatpaks** - VacuumTube, Plex HTPC, Stremio, Kodi, Flathub remote configured
+- **Pre-installed Flatpaks** - VacuumTube, Plex HTPC, Stremio, Kodi, Bazaar, Flathub remote configured
 - **Bigscreen favorites** - All apps pre-pinned to the Plasma Bigscreen home screen
 - **uBlock Origin** - Auto-installed in Firefox via enterprise policy
 - **Auto-updates** - Daily `bootc upgrade` + `flatpak update` via systemd timer
@@ -33,6 +33,14 @@ Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed
 sudo bootc switch ghcr.io/douglascdev/bluehtpc:latest
 sudo reboot
 ```
+
+## Installing New Apps
+
+Use **Bazaar** (pre-installed) to install additional applications. Bazaar is a Flatpak app store that lets you browse and install apps from Flathub directly from your TV remote-friendly UI.
+
+- Launch **Bazaar** from the Plasma Bigscreen home screen
+- Browse a **curated section** with **frequently installed apps** (Jellyfin, Steam, Discord, Spotify, Heroic Games Launcher, Lutris, RetroArch, ProtonPlus, VLC, Flatseal, Steam Link, Dolphin, and Protontricks) for one-click installs
+- Search Flathub for any other app you want
 
 ## KDE Connect Remote
 

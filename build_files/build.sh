@@ -18,7 +18,11 @@ dnf5 install -y firefox flatpak plasma-bigscreen
 # enable flathub
 flatpak remote-add --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
 
-flatpak install -y rocks.shy.VacuumTube com.stremio.Stremio tv.plex.PlexHTPC tv.kodi.Kodi
+flatpak install -y rocks.shy.VacuumTube com.stremio.Stremio tv.plex.PlexHTPC tv.kodi.Kodi io.github.kolunmi.Bazaar
+
+# permission needed to access /etc/bazaar yaml files
+flatpak override io.github.kolunmi.Bazaar --filesystem=/etc/bazaar
+
 # Use a COPR Example:
 #
 # dnf5 -y copr enable ublue-os/staging

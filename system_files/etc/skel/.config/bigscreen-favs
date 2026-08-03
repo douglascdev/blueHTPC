@@ -47,3 +47,13 @@ icon=tv.kodi.Kodi
 name=Kodi
 startupNotify=false
 storageId=tv.kodi.Kodi.desktop
+
+[Favs][5]
+categories=Utility
+comment=Install and browse apps
+desktopPath=/var/lib/flatpak/exports/share/applications/io.github.kolunmi.Bazaar.desktop
+entryPath=/usr/bin/flatpak run --branch=stable --arch=x86_64 --command=bazaar --file-forwarding io.github.kolunmi.Bazaar @@u %U @@
+icon=io.github.kolunmi.Bazaar
+name=Bazaar
+startupNotify=false
+storageId=io.github.kolunmi.Bazaar.desktop

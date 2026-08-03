@@ -1,0 +1,19 @@
+rows:
+
+  - section:
+      title: "Frequently installed"
+      appids:
+        list:
+          - org.jellyfin.JellyfinDesktop
+          - com.valvesoftware.Steam
+          - com.discordapp.Discord
+          - com.spotify.Client
+          - com.heroicgameslauncher.hgl
+          - net.lutris.Lutris
+          - org.libretro.RetroArch
+          - com.vysp3r.ProtonPlus
+          - org.videolan.VLC
+          - com.github.tchx84.Flatseal
+          - com.valvesoftware.SteamLink
+          - org.DolphinEmu.dolphin-emu
+          - com.github.Matoking.protontricks
