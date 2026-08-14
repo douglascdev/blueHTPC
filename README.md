@@ -172,3 +172,7 @@ Edit `disk_config/iso-kde.toml` to change Anaconda kickstart behavior or install
 #### Building via GitHub Actions
 
 Push to `main` - the `build.yml` workflow automatically builds and pushes to GHCR. Trigger the `build-disk.yml` workflow manually from the Actions tab to produce ISOs and QCOW2 images as downloadable artifacts.
+
+## Legal Disclaimer
+
+This software is an open-source, non-commercial hobby project. It does not contain age-verification frameworks and is not intended for use by residents of jurisdictions that mandate operating-system-level age verification
