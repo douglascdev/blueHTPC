@@ -63,6 +63,16 @@ Once paired, the remote control will appear automatically — you can navigate w
 - `podman` and `just` installed
 - `sudo` access
 
+#### Using Nix flake (optional)
+
+If you have [Nix](https://nixos.org/download/) installed, you can use the included `flake.nix` to get all development dependencies automatically:
+
+```bash
+nix develop
+```
+
+This drops you into a shell with `just`, `podman`, `buildah`, `skopeo`, `jq`, `git`, `shellcheck`, and `shfmt` available.
+
 ### Clone
 
 ```bash
@@ -102,6 +112,18 @@ sudo just rebuild-iso
 Open GNOME Boxes, click **+ → Import Image**, and select `output/bootiso/install.iso`.
 
 The ISO runs the Anaconda installer. Once installed, the VM will boot into blueHTPC with Plasma Bigscreen on each subsequent start.
+
+### Run / rebuild a QCOW2 VM
+
+```bash
+# Run the VM (builds the image first if it doesn't exist)
+sudo just run-vm
+
+# Rebuild the container image and disk, then run
+sudo just rebuild-vm
+```
+
+The VM starts a QEMU container with KVM acceleration and opens a noVNC web interface in your browser.
 
 ### Maintainers: Testing changes without reinstalling
 
