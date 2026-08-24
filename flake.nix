@@ -17,6 +17,9 @@
             # Task runner
             just
 
+            # Shell
+            bash
+
             # Container tools
             podman
             buildah
