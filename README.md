@@ -22,7 +22,7 @@ Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed
 
 ### Install from ISO
 
-1. Download the latest ISO (GitHub account needed) from the [Actions page](https://github.com/douglascdev/blueHTPC/actions/workflows/build-disk.yml): click the latest run(first on the list) → **Artifacts** or build it (see Dev section).
+1. Download the latest ISO (GitHub account needed) from the [Actions page](https://github.com/douglascdev/blueHTPC/actions/workflows/build.yml?query=branch%3Amain++): click the latest run(first on the list) → **Artifacts** or build it (see Dev section).
 2. Extract the artifact to get install.iso and use it in [Fedora Media Writer](https://fedoraproject.org/workstation/download/#fedora-media-writer) or a similar program to burn the ISO into a flash drive
 3. Boot the ISO and go through the Anaconda installer
 4. On first boot, you'll be auto-logged into Plasma Bigscreen
