@@ -123,7 +123,7 @@ sudo just run-vm
 sudo just rebuild-vm
 ```
 
-The VM starts a QEMU container with KVM acceleration and opens a noVNC web interface in your browser.
+The VM starts a QEMU container with KVM acceleration. Open [http://localhost:8006](http://localhost:8006) in your browser to access the noVNC web interface.
 
 ### Maintainers: Testing changes without reinstalling
 
