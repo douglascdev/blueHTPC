@@ -60,18 +60,17 @@ Once paired, the remote control will appear automatically — you can navigate w
 
 ### Prerequisites
 
-- `podman` and `just` installed
-- `sudo` access
+- `podman`, `just`, `bluebuild`, and `sudo` access (the VM/disk recipes invoke `sudo` themselves where needed)
 
-#### Using Nix flake (optional)
+#### Using Nix flake (recommended)
 
-If you have [Nix](https://nixos.org/download/) installed, you can use the included `flake.nix` to get all development dependencies automatically:
+If you have [Nix](https://nixos.org/download/) installed, use the included `flake.nix` to get all development dependencies automatically:
 
 ```bash
 nix develop
 ```
 
-This drops you into a shell with `just`, `podman`, `buildah`, `skopeo`, `jq`, `git`, `shellcheck`, and `shfmt` available.
+This drops you into a shell with `just`, `bluebuild`, `podman`, `buildah`, `skopeo`, `jq`, `git`, `shellcheck`, `shfmt`, and `findutils` available.
 
 ### Clone
 
@@ -86,27 +85,23 @@ cd blueHTPC
 just build
 ```
 
-Or build as root (to rebase directly):
-
-```bash
-sudo just build
-```
+Builds via BlueBuild and tags the image as `localhost/bluehtpc:latest` in your (rootless) podman storage. Run everything as your normal user — the recipes below invoke `sudo` only for the steps that need it.
 
 ### Build disk images (ISO / QCOW2)
 
 ```bash
-# Build ISO (builds container image + ISO in one step)
-sudo just rebuild-iso
+# Build ISO (rebuilds container image + ISO in one step)
+just rebuild-iso
 
 # Build QCOW2
-sudo just rebuild-qcow2
+just rebuild-qcow2
 ```
 
 ### Run the ISO in a VM
 
 ```bash
 # Build the ISO first
-sudo just rebuild-iso
+just rebuild-iso
 ```
 
 Open GNOME Boxes, click **+ → Import Image**, and select `output/bootiso/install.iso`.
@@ -117,10 +112,10 @@ The ISO runs the Anaconda installer. Once installed, the VM will boot into blueH
 
 ```bash
 # Run the VM (builds the image first if it doesn't exist)
-sudo just run-vm
+just run-vm
 
 # Rebuild the container image and disk, then run
-sudo just rebuild-vm
+just rebuild-vm
 ```
 
 The VM starts a QEMU container with KVM acceleration. Open [http://localhost:8006](http://localhost:8006) in your browser to access the noVNC web interface.
@@ -131,12 +126,12 @@ After installing from the ISO once, you can iterate on changes without rebuildin
 
 ```bash
 # 1. Build the updated image locally
-sudo just build
+just build
 
 # 2. Push to a test tag (keeps :latest clean for production)
 # GH_TOKEN -> a github PAT with write:packages scope
-sudo podman login ghcr.io -u login -p "$GH_TOKEN"
-sudo podman push localhost/bluehtpc:latest ghcr.io/douglascdev/bluehtpc:testing
+podman login ghcr.io -u login -p "$GH_TOKEN"
+podman push localhost/bluehtpc:latest ghcr.io/douglascdev/bluehtpc:testing
 
 # 3. In the VM, switch to the test tag and reboot
 sudo bootc switch ghcr.io/douglascdev/bluehtpc:testing
@@ -149,16 +144,24 @@ Production systems pinned to `:latest` are unaffected. Once you're satisfied, pu
 
 #### Adding packages
 
-Edit `build_files/build.sh` and add packages to the `dnf5 install` line for RPMs, or a new `flatpak install` line for Flatpaks:
+Edit `recipe.yml` — add RPMs to the `rpm-ostree` module and Flatpaks to the `default-flatpaks` module:
 
-```bash
-dnf5 install -y firefox flatpak plasma-bigscreen my-new-package
-flatpak install -y com.example.MyApp
+```yaml
+- type: rpm-ostree
+  install:
+    - firefox
+    - plasma-bigscreen
+    - my-new-package
+
+- type: default-flatpaks
+  system:
+    install:
+      - com.example.MyApp
 ```
 
 #### Adding apps to Bigscreen favorites
 
-Edit `system_files/etc/skel/.config/bigscreen-favs`. Each entry has an index (`[Favs][N]`) followed by fields describing the app launcher. To add a new app, append a new block with the next index. The `desktopPath` and `entryPath` should match the app's `.desktop` file:
+Edit `files/etc/skel/.config/bigscreen-favs`. Each entry has an index (`[Favs][N]`) followed by fields describing the app launcher. To add a new app, append a new block with the next index. The `desktopPath` and `entryPath` should match the app's `.desktop` file:
 
 ```ini
 [Favs][5]
@@ -176,12 +179,12 @@ For system (non-Flatpak) apps, `desktopPath` goes under `/usr/share/applications
 
 #### Adding system files
 
-Drop files into `system_files/` mirroring the root filesystem layout. They are copied to `/` during the build. For example:
+Drop files into `files/` mirroring the root filesystem layout. They are copied into the image at build time (via the `files` module in `recipe.yml`). For example:
 
-- `system_files/etc/firefox/policies/policies.json` → `/etc/firefox/policies/policies.json`
-- `system_files/usr/lib/systemd/system/my-service.service` → `/usr/lib/systemd/system/my-service.service`
+- `files/etc/firefox/policies/policies.json` → `/etc/firefox/policies/policies.json`
+- `files/usr/lib/systemd/system/my-service.service` → `/usr/lib/systemd/system/my-service.service`
 
-Then enable any new systemd units in `build_files/build.sh`:
+Then enable any new systemd units in `files/scripts/setup-system.sh`:
 
 ```bash
 systemctl enable my-service.service
@@ -193,7 +196,7 @@ Edit `disk_config/iso-kde.toml` to change Anaconda kickstart behavior or install
 
 #### Building via GitHub Actions
 
-Push to `main` - the `build.yml` workflow automatically builds and pushes to GHCR. Trigger the `build-disk.yml` workflow manually from the Actions tab to produce ISOs and QCOW2 images as downloadable artifacts.
+The `build.yml` workflow builds and pushes to GHCR on pull requests and manual dispatch (workflow_dispatch) via the official BlueBuild action. The `build_disk` job then produces ISOs and QCOW2 images as downloadable artifacts.
 
 ## Legal Disclaimer
 

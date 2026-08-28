@@ -3,11 +3,11 @@ set dotenv-load
 
 export image_name := env_var("IMAGE_NAME")
 export repo_organization := env_var("REPO_ORGANIZATION")
-export image_desc := env_var("IMAGE_DESC")
-export image_keywords := env_var("IMAGE_KEYWORDS")
-export image_logo_url := env_var("IMAGE_LOGO_URL")
 export default_tag := env_var("DEFAULT_TAG")
 export bib_image := env_var("BIB_IMAGE")
+
+# Recipe that describes the image to build
+recipe := "recipe.yml"
 
 alias build-vm := build-qcow2
 alias rebuild-vm := rebuild-qcow2
@@ -39,6 +39,56 @@ fix:
     echo "Checking syntax: Justfile"
     just --unstable --fmt -f Justfile || { exit 1; }
 
+# Validate the recipe against the BlueBuild schemas
+[group('BlueBuild')]
+validate *args:
+    bluebuild validate {{ recipe }} {{ args }}
+
+# Generate a Containerfile from the recipe (writes to a file with -o)
+[group('BlueBuild')]
+generate *args:
+    bluebuild generate {{ recipe }} {{ args }}
+
+# Build the image locally with BlueBuild
+#
+# The image is tagged locally (e.g. localhost/<name>:latest) and can be
+# used as the base for the VM disk images below.
+#
+# Additional BlueBuild args and recipe files are passed through.
+# To build a different recipe, change `recipe` in the Justfile header.
+#
+# Examples:
+#   just build
+# just build --push
+[group('BlueBuild')]
+build *args:
+    bluebuild build {{ recipe }} {{ args }}
+
+# Build and push the image to the registry
+[group('BlueBuild')]
+push *args:
+    bluebuild build --push {{ recipe }} {{ args }}
+
+# Build and rechunk the image with Chunkah for smaller updates (New)!
+[group('BlueBuild')]
+rechunk *args:
+    bluebuild build --chunkah {{ recipe }} {{ args }}
+
+# Build and rechunk the image with rpm-ostree for smaller updates (Classic)!
+[group('BlueBuild')]
+ostree-rechunk *args:
+    bluebuild build --build-chunked-oci {{ recipe }} {{ args }}
+
+# Build and switch the local bootc system to the image, and reboot (-r) to boot it
+[group('BlueBuild')]
+switch *args:
+    sudo bluebuild switch {{ recipe }} {{ args }}
+
+# Prune BlueBuild caches and temporary build artifacts
+[group('BlueBuild')]
+prune:
+    bluebuild prune
+
 # Clean Repo
 [group('Utility')]
 clean:
@@ -66,170 +116,52 @@ sudoif command *args:
         if [[ "${UID}" -eq 0 ]]; then
             "$@"
         elif [[ "$(command -v sudo)" && -n "${SSH_ASKPASS:-}" ]] && [[ -n "${DISPLAY:-}" || -n "${WAYLAND_DISPLAY:-}" ]]; then
-            /usr/bin/sudo --askpass "$@" || exit 1
+            sudo --askpass "$@" || exit 1
         elif [[ "$(command -v sudo)" ]]; then
-            /usr/bin/sudo "$@" || exit 1
+            sudo "$@" || exit 1
         else
             exit 1
         fi
     }
     sudoif {{ command }} {{ args }}
 
-# This Justfile recipe builds a container image using Podman.
-#
-# Arguments:
-#   $target_image - The tag you want to apply to the image (default: $image_name).
-#   $tag - The tag for the image (default: $default_tag).
-#
-# The script constructs the version string using the tag and the current date.
-# If the git working directory is clean, it also includes the short SHA of the current HEAD.
-#
-# just build $target_image $tag
-#
-# Example usage:
-#   just build myimage mytag
-#
-# This will build an image 'myimage:mytag'
-#
+# Build a bootc bootable image using Bootc Image Builder (BIB)
+# Converts a container image to a bootable image
+# Parameters:
+#   target_image: The name of the image to build (ex. localhost/fedora)
+#   tag: The tag of the image to build (ex. latest)
+#   type: The type of image to build (ex. qcow2, raw, iso)
+#   config: The configuration file to use for the build (default: disk_config/disk.toml)
 
-# Build the image using the specified parameters
-build $target_image=image_name $tag=default_tag:
+# Example: just _build-bib localhost/fedora latest qcow2 disk_config/disk.toml
+_build-bib $target_image $tag $type $config: (_rootful_load_image target_image tag)
     #!/usr/bin/env bash
+    set -euo pipefail
 
-    set -euox pipefail
+    args="--type ${type} "
+    args+="--use-librepo=True "
+    args+="--rootfs=btrfs"
 
-    BUILD_ARGS=(--network host)
-    LABELS=()
-    if [[ -z "$(git status -s)" ]]; then
-        GIT_SHA=$(git rev-parse --short HEAD)
-        LABELS+=("--label" "io.artifacthub.package.readme-url=https://raw.githubusercontent.com/{{ repo_organization }}/{{ image_name }}/${GIT_SHA}/README.md")
-        LABELS+=("--label" "org.opencontainers.image.documentation=https://raw.githubusercontent.com/{{ repo_organization }}/{{ image_name }}/${GIT_SHA}/README.md")
-        LABELS+=("--label" "org.opencontainers.image.source=https://github.com/{{ repo_organization }}/{{ image_name }}/blob/${GIT_SHA}/Containerfile")
-        LABELS+=("--label" "org.opencontainers.image.url=https://github.com/{{ repo_organization }}/{{ image_name }}/tree/${GIT_SHA}")
-        LABELS+=("--label" "org.opencontainers.image.version={{ default_tag }}.$(date +%Y%m%d)-${GIT_SHA}")
-    fi
+    BUILDTMP=$(mktemp -p "${PWD}" -d -t _build-bib.XXXXXXXXXX)
 
-    # Image metadata for https://artifacthub.io/ - This is optional but is highly recommended so we all can get a index of all the custom images
-    # The metadata by itself is not going to do anything, you choose if you want your image to be on ArtifactHub or not.
-    LABELS+=("--label" "io.artifacthub.package.deprecated=false")
-    LABELS+=("--label" "io.artifacthub.package.keywords={{ image_keywords }}")
-    LABELS+=("--label" "io.artifacthub.package.license=Apache-2.0")
-    LABELS+=("--label" "io.artifacthub.package.logo-url={{ image_logo_url }}")
-    LABELS+=("--label" "io.artifacthub.package.prerelease=false")
-    LABELS+=("--label" "org.opencontainers.image.created=$(date -u +%Y\-%m\-%d\T%H\:%M\:%S\Z)")
-    LABELS+=("--label" "org.opencontainers.image.description={{ image_desc }}")
-    LABELS+=("--label" "org.opencontainers.image.title={{ image_name }}")
-    LABELS+=("--label" "org.opencontainers.image.vendor={{ repo_organization }}")
-
-    # This actually builds the image!
-    PODMAN_BUILD_ARGS=("${BUILD_ARGS[@]}" "${LABELS[@]}" --pull=newer --layers --tag "${target_image}:${tag}" --file Containerfile)
-
-    podman build "${PODMAN_BUILD_ARGS[@]}" .
-
-# Split the image for smaller updates (New)!
-rechunk $target_image=image_name $tag=default_tag:
-    #!/usr/bin/env bash
-
-    set -xeuo pipefail
-
-    # TODO: pin chunkah image to hash once mature enough
-    # You may run into space issues on github runenrs as we are making a
-    # complete copy of the image
-    export CHUNKAH_CONFIG_STR=$(podman inspect "${target_image}")
-    podman run --rm --mount=type=image,src="${target_image}",target=/chunkah \
-    -e CHUNKAH_CONFIG_STR quay.io/coreos/chunkah:latest \
-    build \
-    --verbose \
-    --compressed \
-    --max-layers 128 \
-    --prune /sysroot/ \
-    --label ostree.commit- --label ostree.final-diffid- \
-    --tag "${target_image}:${tag}" | podman load
-
-# Split the image for smaller updates (Classical)!
-ostree-rechunk $target_image=image_name $tag=default_tag:
-    #!/usr/bin/env bash
-
-    set -xeuo pipefail
-
-    # TODO: This is the only blocker for rootless CI
-    # https://github.com/coreos/rpm-ostree/issues/5346
-    if [[ ! "${UID}" -eq "0" ]]; then
-      echo "This needs to run as root."
-      exit 1
-    fi
-
-    # You can use your own base image here to avoid pulling fedora-bootc
-    RPM_OSTREE_CHUNKER_IMAGE="quay.io/fedora/fedora-bootc:latest"
-
-    podman run --rm \
-      --pull=newer \
+    sudo podman run \
+      --rm \
+      -it \
       --privileged \
-      -v "/var/lib/containers:/var/lib/containers" \
-      --entrypoint /usr/bin/rpm-ostree \
-      "${RPM_OSTREE_CHUNKER_IMAGE}" \
-      compose build-chunked-oci \
-      --max-layers 127 \
-      --format-version=2 \
-      --bootc \
-      --from "localhost/${target_image}:${tag}" \
-      --output containers-storage:"localhost/${target_image}:${tag}"
+      --pull=newer \
+      --net=host \
+      --security-opt label=type:unconfined_t \
+      -v $(pwd)/${config}:/config.toml:ro \
+      -v $BUILDTMP:/output \
+      -v /var/lib/containers/storage:/var/lib/containers/storage \
+      "${bib_image}" \
+      ${args} \
+      "${target_image}:${tag}"
 
-# Generate Default Tag
-[group('Utility')]
-generate-default-tag $tag=default_tag:
-    #!/usr/bin/env bash
-    set -eoux pipefail
-
-    echo "${tag}"
-
-# Generate Tags
-[group('Utility')]
-generate-build-tags $target_image=image_name $tag=default_tag:
-    #!/usr/bin/env bash
-    set -eoux pipefail
-
-    DATE=$(date +%Y%m%d)
-    BUILD_TAGS=()
-    if [[ -z "$(git status -s)" ]]; then
-        GIT_SHA=$(git rev-parse --short HEAD)
-        BUILD_TAGS+=("${tag}-${GIT_SHA}")
-        BUILD_TAGS+=("${tag}-${DATE}-${GIT_SHA}")
-        BUILD_TAGS+=("${DATE}-${GIT_SHA}")
-    fi
-
-    BUILD_TAGS+=("${DATE}")
-    BUILD_TAGS+=("${tag}")
-    BUILD_TAGS+=("${tag}-${DATE}")
-
-    echo "${BUILD_TAGS[@]}"
-
-# Tag Images
-[group('Utility')]
-tag-images $target_image=image_name $tag=default_tag tags="":
-    #!/usr/bin/env bash
-    set -eoux pipefail
-
-    # Get Image, and untag
-    IMAGE=$(podman inspect ${target_image}:${tag} | jq -r .[].Id)
-    podman untag ${IMAGE}
-
-    # Tag Image
-    for tag in {{ tags }}; do
-        podman tag $IMAGE "${target_image}:${tag}"
-    done
-
-    # Show Images
-    podman images
-
-# Image Name
-[group('Utility')]
-[private]
-image_name $target_image=image_name:
-    #!/usr/bin/env bash
-    set -eoux pipefail
-
-    echo "${image_name}"
+    mkdir -p output
+    sudo mv -f $BUILDTMP/* output/
+    sudo rmdir $BUILDTMP
+    sudo chown -R $USER: output/
 
 # Command: _rootful_load_image
 # Description: This script checks if the current user is root or running under sudo. If not, it attempts to resolve the image tag using podman inspect.
@@ -280,43 +212,20 @@ _rootful_load_image $target_image=image_name $tag=default_tag:
         just sudoif podman pull "${target_image}:${tag}"
     fi
 
-# Build a bootc bootable image using Bootc Image Builder (BIB)
-# Converts a container image to a bootable image
+# Command: _remove-image
+# Description: Removes the existing image tag so the rebuilt image can take its
+#              place (both rootless and rootful podman storage).
+#
 # Parameters:
-#   target_image: The name of the image to build (ex. localhost/fedora)
-#   tag: The tag of the image to build (ex. latest)
-#   type: The type of image to build (ex. qcow2, raw, iso)
-#   config: The configuration file to use for the build (default: disk_config/disk.toml)
+#   $target_image - The name of the target image to remove (ex. localhost/fedora)
+#   $tag - The tag of the target image to remove (ex. latest)
 
-# Example: just _rebuild-bib localhost/fedora latest qcow2 disk_config/disk.toml
-_build-bib $target_image $tag $type $config: (_rootful_load_image target_image tag)
+_remove-image $target_image $tag:
     #!/usr/bin/env bash
-    set -euo pipefail
+    set -eoux pipefail
 
-    args="--type ${type} "
-    args+="--use-librepo=True "
-    args+="--rootfs=btrfs"
-
-    BUILDTMP=$(mktemp -p "${PWD}" -d -t _build-bib.XXXXXXXXXX)
-
-    sudo podman run \
-      --rm \
-      -it \
-      --privileged \
-      --pull=newer \
-      --net=host \
-      --security-opt label=type:unconfined_t \
-      -v $(pwd)/${config}:/config.toml:ro \
-      -v $BUILDTMP:/output \
-      -v /var/lib/containers/storage:/var/lib/containers/storage \
-      "${bib_image}" \
-      ${args} \
-      "${target_image}:${tag}"
-
-    mkdir -p output
-    sudo mv -f $BUILDTMP/* output/
-    sudo rmdir $BUILDTMP
-    sudo chown -R $USER:$USER output/
+    podman rmi -f "${target_image}:${tag}" > /dev/null 2>&1 || true
+    just sudoif podman rmi -f "${target_image}:${tag}" > /dev/null 2>&1 || true
 
 # Podman builds the image from the Containerfile and creates a bootable image
 # Parameters:
@@ -326,7 +235,13 @@ _build-bib $target_image $tag $type $config: (_rootful_load_image target_image t
 #   config: The configuration file to use for the build (deafult: disk_config/disk.toml)
 
 # Example: just _rebuild-bib localhost/fedora latest qcow2 disk_config/disk.toml
-_rebuild-bib $target_image $tag $type $config: (build target_image tag) && (_build-bib target_image tag type config)
+# Replaces the existing tag before rebuilding the container image.
+_rebuild-bib $target_image $tag $type $config:
+    #!/usr/bin/env bash
+    set -eoux pipefail
+    just _remove-image "$target_image" "$tag"
+    just build
+    just _build-bib "$target_image" "$tag" "$type" "$config"
 
 # Build a QCOW2 virtual machine image
 [group('Build Virtal Machine Image')]
@@ -419,7 +334,7 @@ spawn-vm rebuild="0" type="qcow2" ram="6G":
       -M "bootc-image" \
       --console=gui \
       --cpus=2 \
-      --ram=$(echo {{ ram }}| /usr/bin/numfmt --from=iec) \
+      --ram=$(echo {{ ram }}| numfmt --from=iec) \
       --network-user-mode \
       --vsock=false --pass-ssh-key=false \
       -i ./output/**/*.{{ type }}
@@ -434,7 +349,8 @@ lint:
         exit 1
     fi
     # Run shellcheck on all Bash scripts
-    /usr/bin/find . -iname "*.sh" -type f -exec shellcheck "{}" ';'
+    find . \( -name ".bluebuild-scripts_*" -o -name "_build-bib.*" \) -prune \
+        -o -iname "*.sh" -type f -exec shellcheck "{}" ';'
 
 # Runs shfmt on all Bash scripts
 format:
@@ -446,4 +362,5 @@ format:
         exit 1
     fi
     # Run shfmt on all Bash scripts
-    /usr/bin/find . -iname "*.sh" -type f -exec shfmt --write "{}" ';'
+    find . \( -name ".bluebuild-scripts_*" -o -name "_build-bib.*" \) -prune \
+        -o -iname "*.sh" -type f -exec shfmt --write "{}" ';'

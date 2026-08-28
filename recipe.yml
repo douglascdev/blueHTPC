@@ -1,0 +1,39 @@
+name: bluehtpc
+description: Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed apps, based on bootc/universal blue.
+base-image: ghcr.io/ublue-os/kinoite-main
+image-version: latest
+
+modules:
+  # 1. Automatically copies files inside files/etc and files/usr to the root filesystem
+  - type: files
+    files:
+      - source: etc
+        destination: /etc
+      - source: usr
+        destination: /usr
+
+  # 2. Declaratively manages your ostree/dnf packages
+  - type: rpm-ostree
+    install:
+      - firefox
+      - flatpak
+      - plasma-bigscreen
+      - plasma-bigscreen-wayland
+
+  # 3. Declaratively manages your Flatpaks (Will automatically remove them if deleted from this list!)
+  - type: default-flatpaks@v1
+    system:
+      repo-url: https://flathub.org
+      repo-name: flathub
+      install:
+        - rocks.shy.VacuumTube
+        - com.stremio.Stremio
+        - tv.plex.PlexHTPC
+        - tv.kodi.Kodi
+        - io.github.kolunmi.Bazaar
+
+  # 4. Executes any remaining low-level scripts or service tweaks
+  - type: script
+    scripts:
+      - setup-system.sh
+
