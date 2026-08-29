@@ -33,7 +33,7 @@ jobs:
       matrix:
         recipe:
           # !! Add your recipes here
-          - recipe.yml
+          - ../recipe.yml
 
     steps:
       - name: Build Custom Image
