@@ -7,7 +7,7 @@ export default_tag := env_var("DEFAULT_TAG")
 export bib_image := env_var("BIB_IMAGE")
 
 # Recipe that describes the image to build
-recipe := "recipe.yml"
+recipe := "recipes/recipe.yml"
 
 alias build-vm := build-qcow2
 alias rebuild-vm := rebuild-qcow2

@@ -144,7 +144,7 @@ Production systems pinned to `:latest` are unaffected. Once you're satisfied, pu
 
 #### Adding packages
 
-Edit `recipe.yml` — add RPMs to the `rpm-ostree` module and Flatpaks to the `default-flatpaks` module:
+Edit `recipes/recipe.yml` — add RPMs to the `rpm-ostree` module and Flatpaks to the `default-flatpaks` module:
 
 ```yaml
 - type: rpm-ostree
@@ -179,7 +179,7 @@ For system (non-Flatpak) apps, `desktopPath` goes under `/usr/share/applications
 
 #### Adding system files
 
-Drop files into `files/` mirroring the root filesystem layout. They are copied into the image at build time (via the `files` module in `recipe.yml`). For example:
+Drop files into `files/` mirroring the root filesystem layout. They are copied into the image at build time (via the `files` module in `recipes/recipe.yml`). For example:
 
 - `files/etc/firefox/policies/policies.json` → `/etc/firefox/policies/policies.json`
 - `files/usr/lib/systemd/system/my-service.service` → `/usr/lib/systemd/system/my-service.service`
