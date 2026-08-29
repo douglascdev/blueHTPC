@@ -10,7 +10,7 @@ Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed
 - **Plasma Bigscreen** - TV-friendly 10-foot UI as the default session
 - **Auto-login** - Automatically logs into Plasma Bigscreen on first boot after install
 - **Pre-installed packages** - Firefox, `plasma-bigscreen`, Flatpak support
-- **Pre-installed Flatpaks** - VacuumTube, Plex HTPC, Stremio, Kodi, Bazaar, Flathub remote configured
+- **Pre-installed Flatpaks** - Plex HTPC, Stremio, Kodi, Nuvio, VacuumTube, Bazaar, Flathub remote configured
 - **Bigscreen favorites** - All apps pre-pinned to the Plasma Bigscreen home screen
 - **uBlock Origin** - Auto-installed in Firefox via enterprise policy
 - **Auto-updates** - Daily `bootc upgrade` + `flatpak update` via systemd timer

@@ -1,0 +1,7 @@
+[Desktop Entry]
+Type=Application
+Name=Nuvio
+Exec=flatpak run com.nuvio.media.desktop
+Icon=com.nuvio.media.desktop
+Terminal=false
+Categories=AudioVideo;Player;

@@ -21,16 +21,27 @@ modules:
       - plasma-bigscreen-wayland
 
   # 3. Declaratively manages your Flatpaks (Will automatically remove them if deleted from this list!)
-  - type: default-flatpaks@v1
-    system:
-      repo-url: https://flathub.org
-      repo-name: flathub
-      install:
+  - type: default-flatpaks
+    configurations:
+      - scope: system
+        notify: false
+        repo:
+          url: https://dl.flathub.org/repo/flathub.flatpakrepo
+          name: flathub
+        install: 
         - rocks.shy.VacuumTube
         - com.stremio.Stremio
         - tv.plex.PlexHTPC
         - tv.kodi.Kodi
         - io.github.kolunmi.Bazaar
+
+      - scope: system
+        notify: false
+        repo:
+          url: https://douglascdev.github.io/nuvio-flatpak-repo/nuvio.flatpakrepo
+          name: nuvio
+        install:
+        - com.nuvio.media.desktop
 
   # 4. Executes any remaining low-level scripts or service tweaks
   - type: script

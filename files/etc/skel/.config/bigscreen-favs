@@ -57,3 +57,13 @@ icon=io.github.kolunmi.Bazaar
 name=Bazaar
 startupNotify=false
 storageId=io.github.kolunmi.Bazaar.desktop
+
+[Favs][6]
+categories=AudioVideo,Player
+comment=
+desktopPath=/usr/share/applications/com.nuvio.media.desktop.desktop
+entryPath=flatpak run com.nuvio.media.desktop
+icon=com.nuvio.media.desktop
+name=Nuvio
+startupNotify=false
+storageId=com.nuvio.media.desktop.desktop
