@@ -13,11 +13,6 @@ on:
  #    - '**/README.md'
   workflow_dispatch:
 
-# only run one build at a time
-concurrency:
-  group: ${{ github.workflow }}-${{ github.ref || github.run_id }}
-  cancel-in-progress: true
-
 jobs:
   bluebuild:
     name: Build Custom Image
