@@ -33,9 +33,14 @@ jobs:
       matrix:
         recipe:
           # !! Add your recipes here
-          - ../recipe.yml
+          - recipe.yml
 
     steps:
+      - name: Setup recipe symlink
+        run: |
+          mkdir -p recipes
+          ln -sf ../recipe.yml recipes/recipe.yml
+
       - name: Build Custom Image
         uses: blue-build/github-action@v1.11
         with:
