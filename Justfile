@@ -241,6 +241,7 @@ _rebuild-bib $target_image $tag $type $config:
     set -eoux pipefail
     just _remove-image "$target_image" "$tag"
     just build
+    rm -f "output/${type}/disk.${type}"
     just _build-bib "$target_image" "$tag" "$type" "$config"
 
 # Build a QCOW2 virtual machine image
