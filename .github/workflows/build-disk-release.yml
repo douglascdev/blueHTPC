@@ -27,9 +27,7 @@ on:
         type: string
   push:
     tags:
-      - 'test-v*'
-    branches:
-      - 'testing'
+      - 'v*'
 # pull_request:
 #   branches:
 #     - main
