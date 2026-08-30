@@ -25,6 +25,11 @@ on:
       platform:
         required: true
         type: string
+  push:
+    tags:
+      - 'test-v*'
+    branches:
+      - 'testing'
 # pull_request:
 #   branches:
 #     - main
@@ -98,17 +103,34 @@ jobs:
           types: ${{ matrix.disk-type }}
           additional-args: --use-librepo=True --rootfs btrfs
 
-      - name: Upload disk images and Checksum to Job Artifacts
-        if: inputs.upload-to-s3 != true && github.event_name != 'pull_request'
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      # - name: Upload disk images and Checksum to Job Artifacts
+      #   if: inputs.upload-to-s3 != true && github.event_name != 'pull_request'
+      #   uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+      #   with:
+      #     name: bluehtpc
+      #     path: ${{ steps.build.outputs.output-directory }}
+      #     if-no-files-found: error
+      #     retention-days: 0
+      #     compression-level: 0
+      #     overwrite: true
+
+      - name: Zip and split into 2GB parts
+        run: |
+          BASE_DIR="${{ steps.build.outputs.output-directory }}/bootiso"
+          NEW_NAME="blueHTPC-${{ github.ref_name }}.iso"
+          cd "$BASE_DIR"
+          mv install.iso "$NEW_NAME"
+          # Zip and split it (creates install-v1.2.3.zip, install-v1.2.3.z01, etc.) 
+          # to bypass the 2G limit on github releases
+          zip -s 1900m "blueHTPC-${{ github.ref_name }}.zip" "$NEW_NAME"
+
+      - name: Create Release and Upload Assets
+        uses: softprops/action-gh-release@v2
         with:
-          name: bluehtpc
-          path: ${{ steps.build.outputs.output-directory }}
-          if-no-files-found: error
-          retention-days: 0
-          compression-level: 0
-          overwrite: true
-      
+          files: |
+            ${{ steps.build.outputs.output-directory }}/bootiso/blueHTPC-${{ github.ref_name }}.zip
+            ${{ steps.build.outputs.output-directory }}/bootiso/blueHTPC-${{ github.ref_name }}.z*
+ 
       - name: Upload to S3
         if: inputs.upload-to-s3 == true && github.event_name != 'pull_request'
         shell: bash
