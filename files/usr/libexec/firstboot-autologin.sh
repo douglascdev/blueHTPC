@@ -14,4 +14,7 @@ User=$USER
 Session=$SESSION
 EOF
 fi
+
+plasma-apply-wallpaperimage /home/$USER/.local/share/wallpapers/jr-korpa-E2i7Hftb_rI-unsplash.jpg
+
 systemctl disable firstboot-autologin.service

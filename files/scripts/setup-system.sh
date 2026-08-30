@@ -31,6 +31,3 @@ monitor.alsa.rules = [
   }
 ]
 EOF
-
-# 5. Set wallpaper
-plasma-apply-wallpaperimage ~/.local/share/wallpapers/jr-korpa-E2i7Hftb_rI-unsplash.jpg
