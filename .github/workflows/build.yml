@@ -42,15 +42,3 @@ jobs:
           # enabled by default, disable if your image is small and you want faster builds
           maximize_build_space: true
 
-  build_disk:
-    name: Build disk images
-    permissions:
-      id-token: write
-      contents: read
-      packages: read
-    needs: [bluebuild]
-    uses: ./.github/workflows/build-disk.yml
-    with:
-      platform: amd64
-      upload-to-s3: false
-    secrets: inherit
