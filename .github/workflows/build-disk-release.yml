@@ -57,7 +57,7 @@ jobs:
       matrix:
         disk-type: ["anaconda-iso"]
     permissions:
-      contents: read
+      contents: write
       packages: read
       id-token: write
 
