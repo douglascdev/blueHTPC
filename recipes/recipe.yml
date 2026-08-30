@@ -19,6 +19,7 @@ modules:
       - flatpak
       - plasma-bigscreen
       - plasma-bigscreen-wayland
+      - fastfetch
 
   # 3. Declaratively manages your Flatpaks (Will automatically remove them if deleted from this list!)
   - type: default-flatpaks
