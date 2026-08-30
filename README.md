@@ -3,6 +3,7 @@
 Custom Home Theather PC operating system with Plasma Bigscreen and pre-installed apps, based on bootc/universal blue(the project is NOT affiliated with universal blue, it's just based on their OS)
 
 <img width="1192" height="651" alt="image" src="https://github.com/user-attachments/assets/91742080-a532-4d3c-b099-27020e62ca46" />
+<img width="840" height="318" alt="image" src="https://github.com/user-attachments/assets/887ada88-0d33-4097-971b-c5213077b55c" />
 
 ## Features
 
