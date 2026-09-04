@@ -123,7 +123,7 @@ jobs:
           zip -s 1900m "blueHTPC-${{ github.ref_name }}.zip" "$NEW_NAME"
 
       - name: Create Release and Upload Assets
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: |
             ${{ steps.build.outputs.output-directory }}/bootiso/blueHTPC-${{ github.ref_name }}.zip
